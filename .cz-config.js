@@ -1,56 +1,58 @@
 // 2023/6/2 18:02 --fcg
 
-export default {
+module.exports = {
   // 可选类型
   types: [
     {
-      value: ":sparkles: feat",
+      value: "feat",
       name: "✨ feat:      新功能"
     },
     {
-      value: ":bug: fix",
+      value: "fix: ",
       name: "🐛 fix:      修复"
     },
     {
-      value: ":memo: docs",
+      value: "docs: ",
       name: "📝 docs:      文档变更"
     },
     {
-      value: ":lipstick: style",
+      value: "style: ",
 
       name: "💄 style:     代码格式(不影响代码运行的变动)"
     },
     {
-      value: ":recycle: refactor",
+      value: "refactor: ",
 
       name: "♻️  refactor:    重构 (既不增加feature, 也不是修复bug)"
     },
     {
-      value: ":zap: perf",
+      value: "perf: ",
       name: "⚡️ perf:      性能优化"
     },
     {
-      value: ":white_check_mark: test",
+      value: "test: ",
       name: "✅ test:      增加测试"
     },
     {
-      value: ":wrench: chore",
+      value: "chore: ",
       name: "🔧 chore:     构建过程或辅助工具的变动"
     },
     {
-      value: ":rewind: revert",
+      value: "revert: ",
       name: "⏪ revert:     回退"
     },
     {
-      value: ":rocket: build",
+      value: "build: ",
       name: "🚀 build:     打包"
     }
   ],
 
   // 步骤
-
+  allowCustomScopes: true,
+  skipQuestions:['body','footer'],
   messages: {
     type: "请选择提交的类型：",
+    scope: "请选择一个scope(可选)：",
     customScope: "情输入修改的范围(可选)",
     subject: "请简要描述提交(必填)",
     body: "请输入详细描述(可选)",
