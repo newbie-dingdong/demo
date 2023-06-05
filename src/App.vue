@@ -6,8 +6,8 @@ import { RouterLink, RouterView } from 'vue-router'
   <header>
     <div class="wrapper">
       <nav class="flex-col flex pl-2 pb-2">
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink class="link" to="/">Home</RouterLink>
+        <RouterLink class="link" to="/about">About</RouterLink>
       </nav>
     </div>
   </header>
@@ -15,4 +15,8 @@ import { RouterLink, RouterView } from 'vue-router'
   <RouterView />
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+.link {
+  @apply text-red-700 hover:text-blue-400;
+}
+</style>
