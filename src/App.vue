@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-const a = 1
 </script>
 
 <template>
   <header>
     <div class="wrapper">
-      <nav>
+      <nav class="flex-col flex pl-2 pb-2">
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
