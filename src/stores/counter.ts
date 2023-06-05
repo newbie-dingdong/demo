@@ -1,10 +1,17 @@
 import { ref, computed } from 'vue'
+import type { Ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useCounterStore = defineStore('counter', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
+interface useCounter {
+  count: Ref<number>
+  doubleCount: Ref<number>
+  increment: () => void
+}
+
+export const useCounterStore = defineStore('counter', (): useCounter => {
+  const count = ref<number>(1)
+  const doubleCount = computed<number>(() => count.value * 2)
+  const increment = () => {
     count.value++
   }
 
