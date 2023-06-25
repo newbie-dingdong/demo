@@ -1,22 +1,7 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <nav class="flex-col flex pl-2 pb-2">
-        <RouterLink class="link" to="/">Home</RouterLink>
-        <RouterLink class="link" to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <router-view></router-view>
 </template>
 
-<style scoped lang="scss">
-.link {
-  @apply text-red-700 hover:text-blue-400;
-}
-</style>
+<style lang="scss"></style>

@@ -1,11 +1,11 @@
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-
+import pinia from '@/stores/index'
+import ArcoVue from '@arco-design/web-vue'
 import App from './App.vue'
 import router from './router'
-const app = createApp(App)
 import '@/assets/tailwind.css'
-app.use(createPinia())
-app.use(router)
+const app = createApp(App)
+
+app.use(router).use(pinia).use(ArcoVue)
 
 app.mount('#app')
