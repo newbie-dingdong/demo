@@ -13,7 +13,8 @@
         <icon-apps></icon-apps>
       </template>
       <template #title>首页</template>
-      <a-menu-item key="home">首页</a-menu-item>
+      <a-menu-item @click="router.push('/home')" key="home">首页</a-menu-item>
+      <a-menu-item @click="router.push('/list')" key="list">列表</a-menu-item>
       <a-menu-item @click="router.push('/login')" key="login">登录</a-menu-item>
     </a-sub-menu>
   </a-menu>

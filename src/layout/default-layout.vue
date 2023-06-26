@@ -2,7 +2,8 @@
   <a-layout class="h-screen bg-[#f2f3f5]">
     <nav-bar />
     <a-layout-sider
-      :class="['layout-slider', `!w-[${APP.slideWidth}px]`]"
+      class="layout-slider"
+      :style="{ width: APP.slideWidth + 'px' }"
       :collapsed="APP.slideCollapsed"
       breakpoint="xl"
     >
