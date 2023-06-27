@@ -27,6 +27,7 @@ declare module 'vue' {
     AMenu: typeof import('@arco-design/web-vue')['Menu']
     AMenuItem: typeof import('@arco-design/web-vue')['MenuItem']
     AOption: typeof import('@arco-design/web-vue')['Option']
+    AResult: typeof import('@arco-design/web-vue')['Result']
     ARow: typeof import('@arco-design/web-vue')['Row']
     ASelect: typeof import('@arco-design/web-vue')['Select']
     ASpace: typeof import('@arco-design/web-vue')['Space']
@@ -39,6 +40,8 @@ declare module 'vue' {
     NavBar: typeof import('./src/components/NavBar/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SlideMenu: typeof import('./src/components/Menu/components/slide-menu.vue')['default']
+    SubMenu: typeof import('./src/components/Menu/components/sub-menu.vue')['default']
     TableList: typeof import('./src/components/TableList/index.vue')['default']
   }
 }

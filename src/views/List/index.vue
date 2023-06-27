@@ -8,11 +8,15 @@
 import TableList from '@/components/TableList/index.vue'
 import { TableColumn } from '@/components/TableList/types'
 
+const sexOptions = {
+  '0': '未知',
+  '1': '男',
+  '2': '女'
+}
 const columns: TableColumn[] = [
   {
     dataIndex: 'username',
-    title: '账号',
-    dateType: 'date'
+    title: '账号'
     // hideInSearch: true
   },
   {
@@ -23,11 +27,7 @@ const columns: TableColumn[] = [
   {
     dataIndex: 'sex',
     title: '性别',
-    enum: {
-      '0': '未知',
-      '1': '男',
-      '2': '女'
-    }
+    enum: sexOptions
   },
   {
     dataIndex: 'height',

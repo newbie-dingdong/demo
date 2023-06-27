@@ -1,32 +1,57 @@
 // 2023/6/5 10:07 --fcg
-import type { RouteRecordRaw } from 'vue-router'
+import { RouteRaw } from '@/components/Menu/types'
+import defaultLayout from '@/layout/default-layout.vue'
 
-const routes: RouteRecordRaw[] = [
+const routes: RouteRaw[] = [
   {
     path: '/',
-    redirect: '/Login'
+    redirect: '/dashboard',
+    hideInMenu: true
   },
   {
-    path: '/Login',
+    path: '/login',
     name: 'login',
-    component: () => import('@/views/Login/index.vue')
+    component: () => import('@/views/Login/index.vue'),
+    meta: { title: '登录' },
+    hideInMenu: true
   },
+
   {
     path: '/',
-    name: 'default-layout',
-    component: () => import('@/layout/default-layout.vue'),
+    component: defaultLayout,
+    meta: { title: '首页' },
     children: [
       {
-        path: '/Home',
-        name: 'home',
-        component: () => import('@/views/Home/index.vue')
+        path: 'dashboard',
+        name: 'dashboard',
+        component: () => import('@/views/Home/index.vue'),
+        meta: { title: '首页' }
       },
       {
-        path: '/List',
+        path: 'list',
         name: 'list',
-        component: () => import('@/views/List/index.vue')
+        component: () => import('@/views/List/index.vue'),
+        meta: { title: '列表' }
       }
     ]
+  },
+  {
+    path: '',
+    component: defaultLayout,
+    hideInMenu: true,
+    children: [
+      {
+        path: '404',
+        name: '404',
+        component: () => import('@/views/NotFound/index.vue'),
+        meta: { title: '404' }
+      }
+    ]
+  },
+  {
+    path: '/:catchAll(.*)',
+    redirect: '/404',
+    hideInMenu: true
   }
 ]
 

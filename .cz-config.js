@@ -46,7 +46,7 @@ module.exports = {
       name: "🚀 build:     打包"
     }
   ],
-  scopes: [{ name: "accounts" }, { name: "admin" }, { name: "exampleScope" }, { name: "changeMe" }],
+  scopes: [{ name: "components" }, { name: "router" }, { name: "page" }, { name: "util" }],
   allowTicketNumber: false,
   isTicketNumberRequired: false,
   // 步骤

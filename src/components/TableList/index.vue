@@ -8,6 +8,7 @@
               <a-col class="!px-1" v-for="(item, index) in formColumn" :key="index" :span="6">
                 <a-form-item :field="item.dataIndex" :label="item.title">
                   <a-date-picker
+                    class="w-full"
                     v-if="item.dateType == 'date'"
                     v-model="model[item.dataIndex]"
                   ></a-date-picker>
@@ -15,7 +16,12 @@
                     <a-option label="全部" value=""></a-option>
                     <a-option v-for="(p, i) in item.enum" :value="i" :label="p" :key="i"></a-option>
                   </a-select>
-                  <a-input v-else :placeholder="item.title" v-model="model[item.dataIndex]" />
+                  <a-input
+                    allow-clear
+                    v-else
+                    :placeholder="item.title"
+                    v-model="model[item.dataIndex]"
+                  />
                 </a-form-item>
               </a-col>
             </a-row>
