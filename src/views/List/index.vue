@@ -7,16 +7,27 @@
 <script setup lang="ts">
 import TableList from '@/components/TableList/index.vue'
 import { TableColumn } from '@/components/TableList/types'
+import { Input } from '@arco-design/web-vue'
 
 const sexOptions = {
   '0': '未知',
   '1': '男',
   '2': '女'
 }
+
 const columns: TableColumn[] = [
   {
     dataIndex: 'username',
-    title: '账号'
+    title: '账号',
+    renderForm: (h, params) =>
+      h(Input, {
+        class: 'w-full',
+        placeholder: '账号',
+        modelValue: params.username,
+        'onUpdate:modelValue': (value: string) => {
+          params.username = value
+        }
+      })
     // hideInSearch: true
   },
   {
@@ -37,6 +48,26 @@ const columns: TableColumn[] = [
       medium: '中等',
       large: '高'
     }
+  },
+  {
+    dataIndex: 'action',
+    title: '操作',
+    hideInSearch: true,
+    fixed: 'right',
+    renderColumn: () => [
+      {
+        text: '修改',
+        cb: (row) => console.log(row),
+        type: 'primary',
+        status: 'danger'
+      },
+      {
+        text: '删除',
+        cb: (row) => console.log(row),
+        type: 'primary',
+        status: 'danger'
+      }
+    ]
   }
 ]
 const data = [
@@ -45,7 +76,6 @@ const data = [
     password: '123123',
     sex: 2,
     height: 168
-    // render:(v)=> v==1?'男':'女'
   },
   {
     username: '张三',

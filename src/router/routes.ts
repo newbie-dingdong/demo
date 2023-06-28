@@ -5,7 +5,7 @@ import defaultLayout from '@/layout/default-layout.vue'
 const routes: RouteRaw[] = [
   {
     path: '/',
-    redirect: '/dashboard',
+    redirect: '/home/dashboard',
     hideInMenu: true
   },
   {
@@ -15,11 +15,11 @@ const routes: RouteRaw[] = [
     meta: { title: '登录' },
     hideInMenu: true
   },
-
   {
-    path: '/',
+    path: '/home',
     component: defaultLayout,
     meta: { title: '首页' },
+    redirect: '/home/dashboard',
     children: [
       {
         path: 'dashboard',

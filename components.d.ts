@@ -38,6 +38,7 @@ declare module 'vue' {
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     Menu: typeof import('./src/components/Menu/index.vue')['default']
     NavBar: typeof import('./src/components/NavBar/index.vue')['default']
+    RenderHtml: typeof import('./src/components/TableList/components/render-html.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SlideMenu: typeof import('./src/components/Menu/components/slide-menu.vue')['default']

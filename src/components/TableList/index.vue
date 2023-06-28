@@ -12,6 +12,9 @@
                     v-if="item.dateType == 'date'"
                     v-model="model[item.dataIndex]"
                   ></a-date-picker>
+                  <template v-else-if="item.renderForm">
+                    <render-html :render-func="item.renderForm(h, model)"></render-html>
+                  </template>
                   <a-select v-model="model[item.dataIndex]" v-else-if="item.enum">
                     <a-option label="全部" value=""></a-option>
                     <a-option v-for="(p, i) in item.enum" :value="i" :label="p" :key="i"></a-option>
@@ -82,8 +85,13 @@
             v-for="(item, index) in tableColumn"
             :data-index="item.dataIndex"
           >
-            <template v-if="item.formatCell || item.enum" #cell="{ column, record }">
-              {{ item.formatCell && item.formatCell(record[column.dataIndex]) }}
+            <template v-if="item.renderColumn" #cell="{ record }">
+              <render-html :render-func="renderButton(item.renderColumn(), record)"></render-html>
+            </template>
+            <template v-else-if="item.formatCell" #cell="{ column, record }">
+              {{ (item.formatCell && item.formatCell(record[column.dataIndex])) || '-' }}
+            </template>
+            <template v-else-if="item.enum" #cell="{ column, record }">
               {{ (item.enum && item.enum[record[column.dataIndex]]) || '-' }}
             </template>
           </a-table-column>
@@ -101,9 +109,12 @@ import {
   IconFolder,
   IconDownload
 } from '@arco-design/web-vue/es/icon'
-import { FormInstance, PaginationProps, TableRowSelection } from '@arco-design/web-vue'
-import { TableColumn, HeaderButton } from '@/components/TableList/types'
+import { Button, FormInstance, PaginationProps, TableRowSelection } from '@arco-design/web-vue'
+import { TableColumn, TableRenderButton } from '@/components/TableList/types'
 import { computed, reactive, ref } from 'vue'
+import RenderHtml from '@/components/TableList/components/render-html.vue'
+import { listToObject, dataToVNode } from '@/components/TableList/util'
+import { h } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -132,19 +143,13 @@ const props = withDefaults(
   }
 )
 
+const renderButton = (data: TableRenderButton[], value: any) => {
+  return dataToVNode(data, Button, value)
+}
+
 const emits = defineEmits<{
   (e: 'handleAdd'): void
 }>()
-
-const listToObject = (list: any[], key: string) => {
-  const obj = list.reduce((acc: any, item: any) => {
-    Object.keys(item).forEach((it) => {
-      acc[item[key]] = ''
-    })
-    return acc
-  }, {})
-  return obj
-}
 
 const formRef = ref<FormInstance | null>(null)
 const tableColumn = computed(() => props.columns.filter((item) => !item.hideInTable))
