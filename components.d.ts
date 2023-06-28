@@ -43,6 +43,8 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SlideMenu: typeof import('./src/components/Menu/components/slide-menu.vue')['default']
     SubMenu: typeof import('./src/components/Menu/components/sub-menu.vue')['default']
+    TableColumns: typeof import('./src/components/TableList/components/table-columns.vue')['default']
+    TableForm: typeof import('./src/components/TableList/components/table-form.vue')['default']
     TableList: typeof import('./src/components/TableList/index.vue')['default']
   }
 }

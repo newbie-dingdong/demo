@@ -1,11 +1,18 @@
 <template>
   <a-card title="查询表格" :bordered="false" class="list-container">
-    <table-list row-key="username" :loading="false" :source-data="data" :columns="columns" />
+    <table-list
+      :request="getTableListApi"
+      row-key="username"
+      :loading="false"
+      :source-data="data"
+      :columns="columns"
+    />
   </a-card>
 </template>
 
 <script setup lang="ts">
 import TableList from '@/components/TableList/index.vue'
+import { getTableListApi } from '@/api'
 import { TableColumn } from '@/components/TableList/types'
 import { Input } from '@arco-design/web-vue'
 

@@ -1,54 +1,6 @@
 <template>
   <div class="table-container">
-    <div v-if="formColumn.length" class="table-search">
-      <a-row>
-        <a-col flex="1" class="mr-4">
-          <a-form ref="formRef" layout="horizontal" label-align="left" :model="model">
-            <a-row class="ml-0" :gutter="8">
-              <a-col class="!px-1" v-for="(item, index) in formColumn" :key="index" :span="6">
-                <a-form-item :field="item.dataIndex" :label="item.title">
-                  <a-date-picker
-                    class="w-full"
-                    v-if="item.dateType == 'date'"
-                    v-model="model[item.dataIndex]"
-                  ></a-date-picker>
-                  <template v-else-if="item.renderForm">
-                    <render-html :render-func="item.renderForm(h, model)"></render-html>
-                  </template>
-                  <a-select v-model="model[item.dataIndex]" v-else-if="item.enum">
-                    <a-option label="全部" value=""></a-option>
-                    <a-option v-for="(p, i) in item.enum" :value="i" :label="p" :key="i"></a-option>
-                  </a-select>
-                  <a-input
-                    allow-clear
-                    v-else
-                    :placeholder="item.title"
-                    v-model="model[item.dataIndex]"
-                  />
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </a-form>
-        </a-col>
-        <a-col flex="initial">
-          <a-space size="16">
-            <a-button @click="handleSearch" type="primary">
-              <template #icon>
-                <icon-search />
-              </template>
-              搜索
-            </a-button>
-            <a-button @click="handleReset">
-              <template #icon>
-                <icon-refresh />
-              </template>
-              重置
-            </a-button>
-          </a-space>
-        </a-col>
-      </a-row>
-      <a-divider margin="0"></a-divider>
-    </div>
+    <table-form @handle-search="search" :columns="columns" />
     <div class="table-action mt-2">
       <a-space :size="20">
         <a-button @click="handleAdd" type="primary">
@@ -79,22 +31,7 @@
         :pagination="pagination"
       >
         <template #columns>
-          <a-table-column
-            :title="item.title"
-            :key="index"
-            v-for="(item, index) in tableColumn"
-            :data-index="item.dataIndex"
-          >
-            <template v-if="item.renderColumn" #cell="{ record }">
-              <render-html :render-func="renderButton(item.renderColumn(), record)"></render-html>
-            </template>
-            <template v-else-if="item.formatCell" #cell="{ column, record }">
-              {{ (item.formatCell && item.formatCell(record[column.dataIndex])) || '-' }}
-            </template>
-            <template v-else-if="item.enum" #cell="{ column, record }">
-              {{ (item.enum && item.enum[record[column.dataIndex]]) || '-' }}
-            </template>
-          </a-table-column>
+          <table-columns :columns="columns" />
         </template>
       </a-table>
     </div>
@@ -102,20 +39,12 @@
 </template>
 
 <script setup lang="ts">
-import {
-  IconSearch,
-  IconRefresh,
-  IconPlus,
-  IconFolder,
-  IconDownload
-} from '@arco-design/web-vue/es/icon'
-import { Button, FormInstance, PaginationProps, TableRowSelection } from '@arco-design/web-vue'
-import { TableColumn, TableRenderButton } from '@/components/TableList/types'
-import { computed, reactive, ref } from 'vue'
-import RenderHtml from '@/components/TableList/components/render-html.vue'
-import { listToObject, dataToVNode } from '@/components/TableList/util'
-import { h } from 'vue'
-
+import { TableColumn } from './types'
+import { IconPlus, IconDownload } from '@arco-design/web-vue/es/icon'
+import { PaginationProps, TableRowSelection } from '@arco-design/web-vue'
+import TableForm from './components/table-form.vue'
+import TableColumns from './components/table-columns.vue'
+import { HttpResponse } from '@/request/type'
 const props = withDefaults(
   defineProps<{
     columns: TableColumn[]
@@ -125,6 +54,7 @@ const props = withDefaults(
     stripe?: boolean
     loading?: boolean
     rowKey: string
+    request?: <T>() => Promise<HttpResponse<T>>
     pagePosition?: 'tl' | 'top' | 'tr' | 'bl' | 'bottom' | 'br'
     pagination?: boolean | PaginationProps
     rowSelection?: TableRowSelection
@@ -142,25 +72,12 @@ const props = withDefaults(
     loading: true
   }
 )
-
-const renderButton = (data: TableRenderButton[], value: any) => {
-  return dataToVNode(data, Button, value)
-}
-
 const emits = defineEmits<{
   (e: 'handleAdd'): void
 }>()
 
-const formRef = ref<FormInstance | null>(null)
-const tableColumn = computed(() => props.columns.filter((item) => !item.hideInTable))
-const formColumn = computed(() => props.columns.filter((item) => !item.hideInSearch))
-const model = reactive(listToObject(formColumn.value, 'dataIndex'))
-
-const handleSearch = () => {
-  console.log(model)
-}
-const handleReset = () => {
-  formRef.value?.resetFields()
+const search = async (params: any) => {
+  console.log(params)
 }
 const handleAdd = () => {
   emits('handleAdd')
