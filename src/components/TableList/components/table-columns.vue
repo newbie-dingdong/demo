@@ -4,9 +4,16 @@
     :key="index"
     v-for="(item, index) in tableColumn"
     :data-index="item.dataIndex"
+    :width="item.width"
+    :fixed="item.fixed"
+    :align="item.align"
+    :sortable="item.sortable"
+    :filterable="item.filterable"
+    :ellipsis="item.ellipsis"
+    tooltip
   >
-    <template v-if="item.renderColumn" #cell="{ record }">
-      <render-html :render-func="renderButton(item.renderColumn(), record)"></render-html>
+    <template v-if="item.renderTableItem" #cell="{ record }">
+      <render-html :render-func="renderButton(item.renderTableItem(record), record)"></render-html>
     </template>
     <template v-else-if="item.formatCell" #cell="{ column, record }">
       {{ (item.formatCell && item.formatCell(record[column.dataIndex])) || '-' }}
@@ -20,7 +27,7 @@
 <script setup lang="ts">
 import { TableColumn, TableRenderButton } from '../types'
 import RenderHtml from './render-html.vue'
-import { computed } from 'vue'
+import { computed, VNode } from 'vue'
 import { Button } from '@arco-design/web-vue'
 import { dataToVNode } from '../util'
 
@@ -29,8 +36,13 @@ const props = defineProps<{
 }>()
 
 const tableColumn = computed(() => props.columns.filter((item) => !item.hideInTable))
-const renderButton = (data: TableRenderButton[], value: any) => {
-  return dataToVNode(data, Button, value)
+const renderButton = (data: TableRenderButton[] | VNode, value: any) => {
+  if (Array.isArray(data)) {
+    data = data.filter((item) => !item.hidden)
+    return dataToVNode(data, Button, value)
+  } else {
+    return data
+  }
 }
 </script>
 

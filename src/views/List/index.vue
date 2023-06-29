@@ -2,45 +2,46 @@
   <a-card title="查询表格" :bordered="false" class="list-container">
     <table-list
       :request="getTableListApi"
-      row-key="username"
+      row-key="id"
       :loading="false"
-      :source-data="data"
+      :summary="summary"
       :columns="columns"
     />
   </a-card>
 </template>
 
 <script setup lang="ts">
+import { h } from 'vue'
 import TableList from '@/components/TableList/index.vue'
 import { getTableListApi } from '@/api'
 import { TableColumn } from '@/components/TableList/types'
-import { Input } from '@arco-design/web-vue'
+import { Avatar } from '@arco-design/web-vue'
 
 const sexOptions = {
   '0': '未知',
   '1': '男',
   '2': '女'
 }
-
+const summary = ({ columns, data }) => {
+  console.log(columns, data)
+  return [
+    {
+      username: '总计',
+      avatar: '1001',
+      action: 1
+    }
+  ]
+}
 const columns: TableColumn[] = [
   {
     dataIndex: 'username',
-    title: '账号',
-    renderForm: (h, params) =>
-      h(Input, {
-        class: 'w-full',
-        placeholder: '账号',
-        modelValue: params.username,
-        'onUpdate:modelValue': (value: string) => {
-          params.username = value
-        }
-      })
-    // hideInSearch: true
+    title: '账号'
   },
   {
-    dataIndex: 'password',
-    title: '密码',
-    hideInSearch: true
+    dataIndex: 'avatar',
+    title: '头像',
+    hideInSearch: true,
+    renderTableItem: (record) => h(Avatar, { imageUrl: record.avatar })
   },
   {
     dataIndex: 'sex',
@@ -48,53 +49,24 @@ const columns: TableColumn[] = [
     enum: sexOptions
   },
   {
-    dataIndex: 'height',
-    title: '身高',
-    enum: {
-      small: '矮',
-      medium: '中等',
-      large: '高'
-    }
-  },
-  {
     dataIndex: 'action',
     title: '操作',
     hideInSearch: true,
     fixed: 'right',
-    renderColumn: () => [
+    width: 100,
+    renderTableItem: (record) => [
       {
         text: '修改',
         cb: (row) => console.log(row),
         type: 'primary',
-        status: 'danger'
+        status: 'plain'
       },
       {
         text: '删除',
-        cb: (row) => console.log(row),
-        type: 'primary',
-        status: 'danger'
+        hidden: record.sex == 0,
+        cb: (row) => console.log(row)
       }
     ]
-  }
-]
-const data = [
-  {
-    username: '张三',
-    password: '123123',
-    sex: 2,
-    height: 168
-  },
-  {
-    username: '张三',
-    password: '123123',
-    sex: 1,
-    height: 'medium'
-  },
-  {
-    username: '张三',
-    password: '123123',
-    sex: 0,
-    height: 'large'
   }
 ]
 </script>

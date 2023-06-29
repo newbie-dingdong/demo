@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="footer-container h-[40px] text-center flex items-center justify-center w-full absolute bottom-0"
-  >
+  <div class="footer-container h-[40px] text-center flex items-center justify-center w-full">
     {{ config.copyRight }}
   </div>
 </template>

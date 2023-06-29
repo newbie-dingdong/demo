@@ -8,11 +8,14 @@
               <a-form-item :field="item.dataIndex" :label="item.title">
                 <a-date-picker
                   class="w-full"
-                  v-if="item.dateType == 'date'"
+                  v-if="item.dateType === 'date'"
                   v-model="model[item.dataIndex]"
                 ></a-date-picker>
-                <template v-else-if="item.renderForm">
-                  <render-html :render-func="item.renderForm(h, model)"></render-html>
+                <template v-else-if="item.renderFormItem">
+                  <render-html
+                    v-model="model[item.dataIndex]"
+                    :render-func="item.renderFormItem(model)"
+                  ></render-html>
                 </template>
                 <a-select v-model="model[item.dataIndex]" v-else-if="item.enum">
                   <a-option label="全部" value=""></a-option>
@@ -51,11 +54,12 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, h, ref } from 'vue'
+import { reactive, computed, ref } from 'vue'
 import { TableColumn } from '../types'
 import { FormInstance } from '@arco-design/web-vue'
 import { listToObject } from '../util'
 import { IconSearch, IconRefresh } from '@arco-design/web-vue/es/icon'
+import RenderHtml from './render-html.vue'
 
 const props = defineProps<{
   columns: TableColumn[]

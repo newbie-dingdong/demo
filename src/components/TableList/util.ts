@@ -5,7 +5,7 @@ import { Component, h } from 'vue'
 
 export const listToObject = (list: TableColumn[], key: string) => {
   const obj = list.reduce((acc: any, item: any) => {
-    Object.keys(item).forEach((it) => {
+    Object.keys(item).forEach(() => {
       acc[item[key]] = ''
     })
     return acc

@@ -3,7 +3,7 @@
 import { ref } from 'vue'
 
 const useLoading = (initValue = false) => {
-  const loading = ref(initValue)
+  const loading = ref<boolean>(initValue)
   const setLoading = (value: boolean) => {
     loading.value = value
   }

@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { RouteRaw } from '../types'
 import { IconApps } from '@arco-design/web-vue/es/icon'
-const props = withDefaults(
+withDefaults(
   defineProps<{
     route: RouteRaw
   }>(),

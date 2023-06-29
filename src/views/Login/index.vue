@@ -6,7 +6,9 @@
       <div class="right-inner">
         <submit-form />
       </div>
-      <Footer />
+      <div class="login-footer absolute bottom-0">
+        <Footer />
+      </div>
     </div>
   </view>
 </template>
