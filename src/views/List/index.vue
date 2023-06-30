@@ -1,12 +1,6 @@
 <template>
   <a-card title="查询表格" :bordered="false" class="list-container">
-    <table-list
-      :request="getTableListApi"
-      row-key="id"
-      :loading="false"
-      :summary="summary"
-      :columns="columns"
-    />
+    <table-list :request="getTableListApi" row-key="id" :loading="false" :columns="columns" />
   </a-card>
 </template>
 
@@ -21,15 +15,6 @@ const sexOptions = {
   '0': '未知',
   '1': '男',
   '2': '女'
-}
-const summary = () => {
-  return [
-    {
-      username: '总计',
-      avatar: '1001',
-      action: 1
-    }
-  ]
 }
 const columns: TableColumn[] = [
   {

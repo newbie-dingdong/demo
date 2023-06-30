@@ -19,6 +19,7 @@
     </div>
     <div :class="['table w-full', toolsBar ? 'mt-2' : '']">
       <a-table
+        ref="tableRef"
         hide-expand-button-on-empty
         :bordered="bordered"
         :hoverable="hoverable"
@@ -32,7 +33,9 @@
         :row-selection="rowSelection"
         :row-key="rowKey"
         :page-position="pagePosition"
-        :pagination="pagination"
+        @page-change="handlePage"
+        @page-size-change="handlePageSize"
+        :pagination="pageOptions"
       >
         <template #columns>
           <table-columns :columns="columns" />
@@ -48,12 +51,12 @@
 <script setup lang="ts">
 import { TableColumn } from './types'
 import { IconPlus, IconDownload } from '@arco-design/web-vue/es/icon'
-import { PaginationProps, TableRowSelection, TableData } from '@arco-design/web-vue'
+import { PaginationProps, TableRowSelection, TableData, TableInstance } from '@arco-design/web-vue'
 import TableForm from './components/table-form.vue'
 import TableColumns from './components/table-columns.vue'
 import { HttpResponse } from '@/request/type'
 import useRequest from '@/hooks/request'
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watchEffect } from 'vue'
 import { TableOperationColumn } from '@arco-design/web-vue/es/table/interface'
 
 const props = withDefaults(
@@ -69,7 +72,6 @@ const props = withDefaults(
     rowKey: string
     request?: <T>() => Promise<HttpResponse<T>>
     pagePosition?: 'tl' | 'top' | 'tr' | 'bl' | 'bottom' | 'br'
-    pagination?: boolean | PaginationProps
     rowSelection?: TableRowSelection
     summaryText?: string
     summarySpanMethod?: (data: {
@@ -89,7 +91,6 @@ const props = withDefaults(
     pagePosition: 'br',
     bordered: false,
     rowKey: 'id',
-    pagination: true,
     hoverable: true,
     stripe: false,
     size: 'large',
@@ -98,20 +99,41 @@ const props = withDefaults(
 )
 const params = reactive({ current: 1, pageSize: 10 })
 const loadData = ref<any>([])
+const tableRef = ref<TableInstance | null>(null)
 const tableLoading = ref<boolean>(props.loading)
 const total = ref<number>(0)
 const emits = defineEmits<{
   (e: 'handleAdd'): void
 }>()
-
-const search = async (params: any) => {
-  console.log(params)
-  fetchData(params)
+const handlePage = (e: number) => {
+  params.current = e
 }
+const handlePageSize = (e: number) => {
+  params.pageSize = e
+}
+const search = async (params: any) => {
+  await fetchData(params)
+  params.current = 1
+}
+
 const handleAdd = () => {
   emits('handleAdd')
 }
-const tableData = computed(() => (loadData.value.length > 0 ? loadData.value : props.sourceData))
+
+const pageOptions: PaginationProps = {
+  size: 'small',
+  showTotal: true,
+  showPageSize: true,
+  current: params.current,
+  pageSizeOptions: [10, 20, 30, 50, 100],
+  pageSize: params.pageSize,
+  defaultCurrent: 10
+}
+console.log(pageOptions)
+
+const tableData = computed(() =>
+  loadData.value && loadData.value.length > 0 ? loadData.value : props.sourceData
+)
 const fetchData = async (value?: object) => {
   if (!props.request) return
   tableLoading.value = true
@@ -123,7 +145,9 @@ const fetchData = async (value?: object) => {
   tableLoading.value = loadingValue.value
 }
 
-fetchData()
+watchEffect(() => {
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped></style>

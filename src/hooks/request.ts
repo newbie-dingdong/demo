@@ -3,7 +3,8 @@
 import { ref, UnwrapRef } from 'vue'
 import useLoading from '@/hooks/loading'
 import { HttpResponse } from '@/request/type'
-
+import { Notification } from '@arco-design/web-vue'
+import '@arco-design/web-vue/lib/notification/style/index.css'
 const useRequest = async <T>(
   api: (...args: any[]) => Promise<HttpResponse<T>>,
   params?: object
@@ -14,8 +15,11 @@ const useRequest = async <T>(
     setLoading(true)
     const result = await api({ ...params })
     data.value = result.data as T as UnwrapRef<T>
-  } catch (e) {
-    console.log(e)
+  } catch (e: any) {
+    Notification.warning({
+      title: '接口错误',
+      content: e.message
+    })
   } finally {
     setLoading(false)
   }
