@@ -19,6 +19,7 @@
     </div>
     <div :class="['table w-full', toolsBar ? 'mt-2' : '']">
       <a-table
+        hide-expand-button-on-empty
         :bordered="bordered"
         :hoverable="hoverable"
         :data="tableData"

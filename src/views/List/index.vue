@@ -22,8 +22,7 @@ const sexOptions = {
   '1': '男',
   '2': '女'
 }
-const summary = ({ columns, data }) => {
-  console.log(columns, data)
+const summary = () => {
   return [
     {
       username: '总计',
@@ -41,7 +40,7 @@ const columns: TableColumn[] = [
     dataIndex: 'avatar',
     title: '头像',
     hideInSearch: true,
-    renderTableItem: (record) => h(Avatar, { imageUrl: record.avatar })
+    renderTableItem: (record) => h(Avatar, { size: 66, shape: 'square', imageUrl: record.avatar })
   },
   {
     dataIndex: 'sex',
