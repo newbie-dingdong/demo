@@ -35,7 +35,7 @@
         :page-position="pagePosition"
         @page-change="handlePage"
         @page-size-change="handlePageSize"
-        :pagination="pageOptions"
+        :pagination="paginOptions"
       >
         <template #columns>
           <table-columns :columns="columns" />
@@ -51,13 +51,14 @@
 <script setup lang="ts">
 import { TableColumn } from './types'
 import { IconPlus, IconDownload } from '@arco-design/web-vue/es/icon'
-import { PaginationProps, TableRowSelection, TableData, TableInstance } from '@arco-design/web-vue'
+import { TableRowSelection, TableData, TableInstance } from '@arco-design/web-vue'
 import TableForm from './components/table-form.vue'
 import TableColumns from './components/table-columns.vue'
 import { HttpResponse } from '@/request/type'
 import useRequest from '@/hooks/request'
 import { computed, reactive, ref, watchEffect } from 'vue'
 import { TableOperationColumn } from '@arco-design/web-vue/es/table/interface'
+import { basePagination } from '@/components/TableList/util'
 
 const props = withDefaults(
   defineProps<{
@@ -97,7 +98,7 @@ const props = withDefaults(
     loading: true
   }
 )
-const params = reactive({ current: 1, pageSize: 10 })
+const paginOptions = reactive({ ...basePagination })
 const loadData = ref<any>([])
 const tableRef = ref<TableInstance | null>(null)
 const tableLoading = ref<boolean>(props.loading)
@@ -106,40 +107,33 @@ const emits = defineEmits<{
   (e: 'handleAdd'): void
 }>()
 const handlePage = (e: number) => {
-  params.current = e
+  // params.current = e
+  paginOptions.current = e
 }
 const handlePageSize = (e: number) => {
-  params.pageSize = e
+  paginOptions.pageSize = e
 }
-const search = async (params: any) => {
-  await fetchData(params)
-  params.current = 1
+const search = async (queryParams: any) => {
+  paginOptions.current = 1
+  await fetchData(queryParams)
 }
 
 const handleAdd = () => {
   emits('handleAdd')
 }
 
-const pageOptions: PaginationProps = {
-  size: 'small',
-  showTotal: true,
-  showPageSize: true,
-  current: params.current,
-  pageSizeOptions: [10, 20, 30, 50, 100],
-  pageSize: params.pageSize,
-  defaultCurrent: 10
-}
-console.log(pageOptions)
-
 const tableData = computed(() =>
   loadData.value && loadData.value.length > 0 ? loadData.value : props.sourceData
 )
-const fetchData = async (value?: object) => {
+const fetchData = async (queryParams?: object) => {
   if (!props.request) return
   tableLoading.value = true
   const { loading: loadingValue, data } = await useRequest<any[]>(props.request, {
-    ...params,
-    ...value
+    ...queryParams,
+    current: paginOptions.current,
+    pageSize: paginOptions.pageSize,
+    _page: paginOptions.current,
+    _limit: paginOptions.pageSize
   })
   loadData.value = data.value
   tableLoading.value = loadingValue.value

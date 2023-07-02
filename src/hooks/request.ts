@@ -14,7 +14,7 @@ const useRequest = async <T>(
   try {
     setLoading(true)
     const result = await api({ ...params })
-    data.value = result.data as T as UnwrapRef<T>
+    data.value = result as T as UnwrapRef<T>
   } catch (e: any) {
     Notification.warning({
       title: '接口错误',

@@ -2,6 +2,7 @@
 
 import { TableColumn, TableRenderButton } from '@/components/TableList/types'
 import { Component, h } from 'vue'
+import { PaginationProps } from '@arco-design/web-vue'
 
 export const listToObject = (list: TableColumn[], key: string) => {
   const obj = list.reduce((acc: any, item: any) => {
@@ -26,4 +27,15 @@ export const dataToVNode = (data: TableRenderButton[], component: Component, val
     )
   )
   return vnode
+}
+
+export const basePagination: PaginationProps = {
+  size: 'small',
+  showTotal: true,
+  showPageSize: true,
+  total: 12,
+  current: 1,
+  pageSizeOptions: [10, 20, 30, 50, 100],
+  pageSize: 10,
+  defaultCurrent: 10
 }
