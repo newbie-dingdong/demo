@@ -47,6 +47,8 @@ const columns: TableColumn[] = [
       },
       {
         text: '删除',
+        type: 'primary',
+        status: 'danger',
         hidden: record.sex == 0,
         cb: (row) => console.log(row)
       }
