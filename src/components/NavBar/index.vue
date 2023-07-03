@@ -2,7 +2,7 @@
   <div
     class="navbar z-[100] fixed top-0 w-full justify-between items-center px-4 bg-white border-b h-[60px] flex"
   >
-    <div class="logo">
+    <div @click="goHome" class="logo cursor-pointer">
       <span class="text-[0.75rem]">{{ config.title }}</span>
     </div>
     <div class="right pr-4 cursor-pointer">
@@ -24,6 +24,11 @@
 <script setup lang="ts">
 import config from '@/config'
 import { IconImport } from '@arco-design/web-vue/es/icon'
+import router from '@/router'
+
+const goHome = () => {
+  router.push('/')
+}
 </script>
 
 <style lang="scss" scoped></style>

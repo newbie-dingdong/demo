@@ -5,7 +5,7 @@ import defaultLayout from '@/layout/default-layout.vue'
 const routes: RouteRaw[] = [
   {
     path: '/',
-    redirect: '/home/dashboard',
+    redirect: '/home',
     hideInMenu: true
   },
   {
@@ -36,7 +36,7 @@ const routes: RouteRaw[] = [
     ]
   },
   {
-    path: '',
+    path: '/',
     component: defaultLayout,
     hideInMenu: true,
     children: [
