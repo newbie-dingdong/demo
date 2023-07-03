@@ -1,6 +1,6 @@
 <template>
   <div class="table-container">
-    <table-form v-if="headerSearch" @handle-search="search" :columns="columns" />
+    <table-form v-if="headerSearch" v-model="model" @handle-search="search" :columns="columns" />
     <div v-if="toolsBar" :class="['table-action', headerSearch ? 'mt-2' : '']">
       <a-space :size="20">
         <a-button @click="handleAdd" type="primary">
@@ -14,6 +14,18 @@
             <icon-download />
           </template>
           下载
+        </a-button>
+      </a-space>
+      <a-space v-if="rowSelectionsKeys.length" :size="20">
+        <a-button
+          @click="emits('handleRowSelections', rowSelectionsKeys)"
+          type="primary"
+          status="danger"
+        >
+          <template #icon>
+            <icon-download />
+          </template>
+          批量操作
         </a-button>
       </a-space>
     </div>
@@ -32,8 +44,11 @@
         :summary-span-method="summarySpanMethod"
         :row-selection="rowSelection"
         :row-key="rowKey"
+        :selected-keys="rowSelectionsKeys"
         :page-position="pagePosition"
         @page-change="handlePage"
+        @select="handleSelect"
+        @select-all="handleSelectAll"
         @page-size-change="handlePageSize"
         :pagination="paginOptions"
       >
@@ -51,14 +66,14 @@
 <script setup lang="ts">
 import { TableColumn } from './types'
 import { IconPlus, IconDownload } from '@arco-design/web-vue/es/icon'
-import { TableRowSelection, TableData, TableInstance } from '@arco-design/web-vue'
+import { PaginationProps, TableData, TableInstance, TableRowSelection } from '@arco-design/web-vue'
 import TableForm from './components/table-form.vue'
 import TableColumns from './components/table-columns.vue'
 import { HttpResponse } from '@/request/type'
 import useRequest from '@/hooks/request'
-import { computed, reactive, ref, watchEffect } from 'vue'
+import { computed, reactive, ref, shallowRef, watchEffect } from 'vue'
 import { TableOperationColumn } from '@arco-design/web-vue/es/table/interface'
-import { basePagination } from '@/components/TableList/util'
+import { basePagination, baseRowSelection, listToObject } from '@/components/TableList/util'
 
 const props = withDefaults(
   defineProps<{
@@ -66,6 +81,7 @@ const props = withDefaults(
     toolsBar?: boolean
     columns: TableColumn[]
     sourceData?: any
+    rowSelection?: TableRowSelection
     bordered?: boolean
     hoverable?: boolean
     stripe?: boolean
@@ -73,7 +89,6 @@ const props = withDefaults(
     rowKey: string
     request?: <T>() => Promise<HttpResponse<T>>
     pagePosition?: 'tl' | 'top' | 'tr' | 'bl' | 'bottom' | 'br'
-    rowSelection?: TableRowSelection
     summaryText?: string
     summarySpanMethod?: (data: {
       record: TableData
@@ -98,24 +113,45 @@ const props = withDefaults(
     loading: true
   }
 )
-const paginOptions = reactive({ ...basePagination })
-const loadData = ref<any>([])
+const emits = defineEmits<{
+  (e: 'handleAdd'): void
+  (e: 'handleRowSelections', value: (string | number)[]): void
+}>()
+
+const rowSelectionsKeys = ref<(string | number)[]>([])
+const paginOptions = reactive<PaginationProps>({ ...basePagination })
+const loadData = shallowRef<any>([])
 const tableRef = ref<TableInstance | null>(null)
 const tableLoading = ref<boolean>(props.loading)
 const total = ref<number>(0)
-const emits = defineEmits<{
-  (e: 'handleAdd'): void
-}>()
+const formColumn = computed(() => props.columns.filter((item) => !item.hideInSearch))
+const model = reactive(listToObject(formColumn.value, 'dataIndex'))
 const handlePage = (e: number) => {
-  // params.current = e
+  // 切换分页
   paginOptions.current = e
 }
+
+const handleSelect = (e: (string | number)[]) => {
+  // 单选
+  rowSelectionsKeys.value = e
+}
+
+const handleSelectAll = (flag: boolean) => {
+  if (flag) {
+    rowSelectionsKeys.value = tableData.value.map((item: any) => item[props.rowKey])
+  } else {
+    rowSelectionsKeys.value = []
+  }
+}
 const handlePageSize = (e: number) => {
+  // 切换显示条数
   paginOptions.pageSize = e
 }
-const search = async (queryParams: any) => {
+const search = async () => {
+  // 搜索
+  console.log(model)
   paginOptions.current = 1
-  await fetchData(queryParams)
+  await fetchData(model)
 }
 
 const handleAdd = () => {
@@ -131,9 +167,7 @@ const fetchData = async (queryParams?: object) => {
   const { loading: loadingValue, data } = await useRequest<any[]>(props.request, {
     ...queryParams,
     current: paginOptions.current,
-    pageSize: paginOptions.pageSize,
-    _page: paginOptions.current,
-    _limit: paginOptions.pageSize
+    pageSize: paginOptions.pageSize
   })
   loadData.value = data.value
   tableLoading.value = loadingValue.value
@@ -144,6 +178,10 @@ watchEffect(() => {
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.table-action {
+  @apply flex items-center justify-between;
+}
+</style>
 
 <!-- 2023/6/26 9:20 --fcg -->

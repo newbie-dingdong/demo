@@ -2,7 +2,7 @@
 
 import { TableColumn, TableRenderButton } from '@/components/TableList/types'
 import { Component, h } from 'vue'
-import { PaginationProps } from '@arco-design/web-vue'
+import { PaginationProps, TableRowSelection } from '@arco-design/web-vue'
 
 export const listToObject = (list: TableColumn[], key: string) => {
   const obj = list.reduce((acc: any, item: any) => {
@@ -38,4 +38,9 @@ export const basePagination: PaginationProps = {
   pageSizeOptions: [10, 20, 30, 50, 100],
   pageSize: 10,
   defaultCurrent: 10
+}
+
+export const baseRowSelection: TableRowSelection = {
+  type: 'checkbox',
+  showCheckedAll: true
 }

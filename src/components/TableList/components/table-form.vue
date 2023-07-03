@@ -54,27 +54,34 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { TableColumn } from '../types'
 import { FormInstance } from '@arco-design/web-vue'
-import { listToObject } from '../util'
 import { IconSearch, IconRefresh } from '@arco-design/web-vue/es/icon'
 import RenderHtml from './render-html.vue'
 
 const props = defineProps<{
   columns: TableColumn[]
+  modelValue: object
 }>()
 
 const emits = defineEmits<{
-  (e: 'handleSearch', params: any): void
+  (e: 'handleSearch'): void
+  (e: 'update:modelValue', value: any): void
 }>()
 
 const formRef = ref<FormInstance | null>(null)
 const formColumn = computed(() => props.columns.filter((item) => !item.hideInSearch))
-const model = reactive(listToObject(formColumn.value, 'dataIndex'))
-
+const model = computed({
+  get() {
+    return props.modelValue
+  },
+  set(value) {
+    emits('update:modelValue', value)
+  }
+})
 const handleSearch = () => {
-  emits('handleSearch', model)
+  emits('handleSearch')
 }
 const handleReset = () => {
   formRef.value?.resetFields()
